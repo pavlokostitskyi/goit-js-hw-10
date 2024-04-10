@@ -20,3 +20,9 @@
  .value {
    font-size: xx-large;
  }
+ .title{
+   display: flex;
+   font-size: 36px;
+   justify-content: center;
+   align-items: center;
+ }
