@@ -6,7 +6,6 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 
-
 const startBtn = document.querySelector("[data-start]");
 const datetimePicker = document.getElementById("datetime-picker");
 const daysDisplay = document.querySelector("[data-days]");
@@ -14,18 +13,20 @@ const hoursDisplay = document.querySelector("[data-hours]");
 const minutesDisplay = document.querySelector("[data-minutes]");
 const secondsDisplay = document.querySelector("[data-seconds]");
 
+
+const currentDate = new Date();
 flatpickr(datetimePicker, {
   enableTime: true,
   time_24hr: true,
+  defaultDate: currentDate, 
   minuteIncrement: 1,
   onClose(selectedDates) {
     const userSelectedDate = selectedDates[0];
-    const currentDate = new Date();
 
-    if (userSelectedDate <= currentDate) {
+    if (!userSelectedDate || userSelectedDate <= currentDate) {
       iziToast.warning({
         title: "Warning",
-        message: "Please choose a date in the future",
+        message: "Please choose a date and time in the future",
         position: "topCenter"
       });
       startBtn.disabled = true;
@@ -87,4 +88,10 @@ startBtn.addEventListener("click", () => {
   const timer = new Timer(selectedDate);
   timer.start();
   startBtn.disabled = true;
+});
+
+const form = document.querySelector('.form');
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  datetimePicker.value = '';
 });

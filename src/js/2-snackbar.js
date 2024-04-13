@@ -1,18 +1,16 @@
-// Описаний у документації
 import iziToast from "izitoast";
-// Додатковий імпорт стилів
 import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector('.form');
 
 form.addEventListener('submit', (event) => {
-  event.preventDefault(); // Prevent form submission
+  event.preventDefault();
 
   const delayInput = document.querySelector('input[name="delay"]');
   const stateInputs = document.querySelectorAll('input[name="state"]');
-  
+
   const delay = delayInput.value;
-  
+
   const state = [...stateInputs].find(input => input.checked).value;
 
   const notificationPromise = new Promise((resolve, reject) => {
@@ -25,7 +23,6 @@ form.addEventListener('submit', (event) => {
     }, delay);
   });
 
-
   notificationPromise
     .then((delay) => {
       iziToast.success({
@@ -33,6 +30,8 @@ form.addEventListener('submit', (event) => {
         message: `✅ Fulfilled promise in ${delay}ms`,
         position: "topCenter",
       });
+      delayInput.value = '';
+      stateInputs.forEach(input => input.checked = false);
     })
     .catch((delay) => {
       iziToast.error({
@@ -40,5 +39,7 @@ form.addEventListener('submit', (event) => {
         message: `❌ Rejected promise in ${delay}ms`,
         position: "topCenter",
       });
+      delayInput.value = '';
+      stateInputs.forEach(input => input.checked = false);
     });
 });
