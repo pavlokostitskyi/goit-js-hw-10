@@ -5,7 +5,6 @@ import iziToast from "izitoast";
 // Додатковий імпорт стилів
 import "izitoast/dist/css/iziToast.min.css";
 
-
 const startBtn = document.querySelector("[data-start]");
 const datetimePicker = document.getElementById("datetime-picker");
 const daysDisplay = document.querySelector("[data-days]");
@@ -13,7 +12,7 @@ const hoursDisplay = document.querySelector("[data-hours]");
 const minutesDisplay = document.querySelector("[data-minutes]");
 const secondsDisplay = document.querySelector("[data-seconds]");
 
-
+let timer = null; 
 const currentDate = new Date();
 flatpickr(datetimePicker, {
   enableTime: true,
@@ -83,15 +82,31 @@ class Timer {
     secondsDisplay.textContent = String(seconds).padStart(2, "0");
   }
 }
+
 startBtn.addEventListener("click", () => {
+  if (timer) {
+    iziToast.warning({
+      title: "Warning",
+      message: "The timer is already running",
+      position: "topCenter"
+    });
+    return;
+  }
+
   const selectedDate = new Date(datetimePicker.value);
-  const timer = new Timer(selectedDate);
-  timer.start();
+
+  if (!selectedDate || selectedDate <= new Date()) {
+    iziToast.warning({
+      title: "Warning",
+      message: "Please choose a date and time in the future",
+      position: "topCenter"
+    });
+    return;
+  }
+
+  const timerInstance = new Timer(selectedDate);
+  timerInstance.start();
+  timer = timerInstance.timerInterval;
   startBtn.disabled = true;
 });
 
-const form = document.querySelector('.form');
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  datetimePicker.value = '';
-});
